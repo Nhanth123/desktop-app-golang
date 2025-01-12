@@ -3,6 +3,7 @@
 import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
+	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 )
 
@@ -13,18 +14,25 @@ type config struct {
 	SaveMenuItem  *fyne.MenuItem
 }
 
-var cfg = config
+var cfg config
 
 func main() {
 	a := app.New()
 	win := a.NewWindow("Daily_Task")
 	edit, preview := cfg.makeUI()
+	win.SetContent(container.NewHSplit(edit, preview))
 
+	win.Resize(fyne.Size{Width: 800, Height: 500})
+	win.CenterOnScreen()
+	win.ShowAndRun()
 }
 
-func (app *config) makeUI(*widget.Entry, *widget.RichText) {
+func (app *config) makeUI() (*widget.Entry, *widget.RichText) {
 	edit := widget.NewMultiLineEntry()
 	preview := widget.NewRichTextFromMarkdown("")
 	app.EditWidget = edit
 	app.PreviewWidget = preview
+
+	edit.OnChanged = preview.ParseMarkdown
+	return edit, preview
 }
