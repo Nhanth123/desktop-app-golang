@@ -10,10 +10,13 @@ static class Program
     {
         Log.Logger = new LoggerConfiguration()
             .WriteTo.Console()
-            .WriteTo.File("log-.txt",
+            .WriteTo.File("logs\\app.log-.txt",
             outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}",
             rollingInterval: RollingInterval.Day)
        .CreateLogger();
+
+        Log.Information("Application Starting...");
+
 
         IConfigurationBuilder builder = new ConfigurationBuilder();
 
@@ -29,5 +32,7 @@ static class Program
 
         ApplicationConfiguration.Initialize();
         Application.Run(new CustomerMerger());
+
+        Log.CloseAndFlush();
     }
 }

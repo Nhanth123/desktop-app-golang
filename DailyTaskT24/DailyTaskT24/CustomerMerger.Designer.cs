@@ -47,11 +47,14 @@ partial class CustomerMerger
         progressBar1 = new ProgressBar();
         bgwWorker = new BackgroundWorker();
         bsCustomerImport = new BindingSource(components);
+        tableLayoutPanel3 = new TableLayoutPanel();
+        btn_Upload = new Button();
         tableLayoutPanel1.SuspendLayout();
         ((ISupportInitialize)dgvCustomerInput).BeginInit();
         ((ISupportInitialize)dgvCustomerOutput).BeginInit();
         tableLayoutPanel2.SuspendLayout();
         ((ISupportInitialize)bsCustomerImport).BeginInit();
+        tableLayoutPanel3.SuspendLayout();
         SuspendLayout();
         // 
         // btn_Verify
@@ -73,6 +76,7 @@ partial class CustomerMerger
         tableLayoutPanel1.Controls.Add(dgvCustomerOutput, 1, 1);
         tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 0, 0);
         tableLayoutPanel1.Controls.Add(progressBar1, 0, 2);
+        tableLayoutPanel1.Controls.Add(tableLayoutPanel3, 1, 0);
         tableLayoutPanel1.Dock = DockStyle.Fill;
         tableLayoutPanel1.Location = new Point(0, 0);
         tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -143,8 +147,8 @@ partial class CustomerMerger
         // tableLayoutPanel2
         // 
         tableLayoutPanel2.ColumnCount = 2;
-        tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 42.85714F));
-        tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 57.14286F));
+        tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.9172935F));
+        tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 83.08271F));
         tableLayoutPanel2.Controls.Add(btn_Verify, 0, 1);
         tableLayoutPanel2.Location = new Point(3, 3);
         tableLayoutPanel2.Name = "tableLayoutPanel2";
@@ -161,6 +165,29 @@ partial class CustomerMerger
         progressBar1.Size = new Size(159, 23);
         progressBar1.TabIndex = 4;
         // 
+        // tableLayoutPanel3
+        // 
+        tableLayoutPanel3.ColumnCount = 2;
+        tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 42.85714F));
+        tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 57.14286F));
+        tableLayoutPanel3.Controls.Add(btn_Upload, 0, 1);
+        tableLayoutPanel3.Location = new Point(757, 3);
+        tableLayoutPanel3.Name = "tableLayoutPanel3";
+        tableLayoutPanel3.RowCount = 2;
+        tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+        tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+        tableLayoutPanel3.Size = new Size(337, 65);
+        tableLayoutPanel3.TabIndex = 5;
+        // 
+        // btn_Upload
+        // 
+        btn_Upload.Location = new Point(3, 35);
+        btn_Upload.Name = "btn_Upload";
+        btn_Upload.Size = new Size(75, 23);
+        btn_Upload.TabIndex = 0;
+        btn_Upload.Text = "Upload";
+        btn_Upload.UseVisualStyleBackColor = true;
+        // 
         // CustomerMerger
         // 
         AutoScaleDimensions = new SizeF(7F, 15F);
@@ -174,6 +201,7 @@ partial class CustomerMerger
         ((ISupportInitialize)dgvCustomerOutput).EndInit();
         tableLayoutPanel2.ResumeLayout(false);
         ((ISupportInitialize)bsCustomerImport).EndInit();
+        tableLayoutPanel3.ResumeLayout(false);
         ResumeLayout(false);
     }
 
@@ -195,4 +223,6 @@ partial class CustomerMerger
     private DataGridViewTextBoxColumn col_Company_Cancel;
     private DataGridViewTextBoxColumn col_TicketNumber;
     private DataGridViewTextBoxColumn col_CompanyCode;
+    private TableLayoutPanel tableLayoutPanel3;
+    private Button btn_Upload;
 }

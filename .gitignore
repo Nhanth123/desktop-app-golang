@@ -4,8 +4,10 @@
 /build/www/**
 /src/test/javascript/coverage/
 /src/test/javascript/PhantomJS*/
-/packages/**
-
+/DailyTaskT24/packages/
+/DailyTaskT24/DailyTaskT24/bin/
+/DailyTaskT24/.vs
+/DailyTaskT24/DailyTaskT24/obj/
 ######################
 # Node
 ######################

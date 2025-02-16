@@ -13,7 +13,20 @@ public partial class CustomerMerger : Form
     public CustomerMerger()
     {
         InitializeComponent();
+        Log.Information("CustomerMergerForm initialized.");
+
         _sqliteHelper = new SQLiteHelper("mydatabase.db");
+
+    }
+
+    private async Task LoadData()
+    {
+        Cursor.Current = Cursors.WaitCursor;
+
+        var companyTable = await _sqliteHelper.ExecuteQueryAsync("SELECT Name, Code FROM CompanyCode");
+
+
+        Cursor.Current = Cursors.Default;
 
     }
 
@@ -34,7 +47,7 @@ public partial class CustomerMerger : Form
 
     private async Task LoadDataAsync()
     {
-        DataTable companyTable =  await _sqliteHelper.ExecuteQueryAsync("SELECT Name, Code FROM CompanyCode");
+        var companyTable = await _sqliteHelper.ExecuteQueryAsync("SELECT Name, Code FROM CompanyCode");
         dgvCustomerOutput.DataSource = companyTable; // Assuming you have a DataGridView to show data
     }
 
@@ -74,12 +87,14 @@ public partial class CustomerMerger : Form
                     newRow.Cells["col_Company_Cancel"].Value = companyCancel;
                     newRow.Cells["col_TicketNumber"].Value = ticketnumber;
 
+                    dt
+
                 }
             }
             catch (Exception ex)
             {
-                Log.Debug(ex.Message);
-                throw;
+                Log.Error($"Exeception occurs: {ex.Message}");
+                MessageBox.Show("Error");
             }
 
         }
