@@ -2,13 +2,14 @@
 using Serilog;
 using System.Data;
 using System.Data.SQLite;
-using System.Windows.Forms;
+using System.Text;
 
 namespace DailyTaskT24;
 
 public partial class CustomerMerger : Form
 {
     private SQLiteHelper _sqliteHelper;
+    DataTable companyTable = new();
 
     public CustomerMerger()
     {
@@ -16,20 +17,22 @@ public partial class CustomerMerger : Form
         Log.Information("CustomerMergerForm initialized.");
 
         _sqliteHelper = new SQLiteHelper("mydatabase.db");
-
     }
 
-    private async Task LoadData()
+    private void LoadData()
     {
-        Cursor.Current = Cursors.WaitCursor;
 
-        var companyTable = await _sqliteHelper.ExecuteQueryAsync("SELECT Name, Code FROM CompanyCode");
+        companyTable = _sqliteHelper.ExecuteQuerySync("SELECT Name, Code FROM CompanyCode");
 
-
-        Cursor.Current = Cursors.Default;
+        col_MKH_Cancel.DefaultCellStyle.BackColor = Color.FromArgb(128, 255, 255);
+        col_CMND_Cancel.DefaultCellStyle.BackColor = Color.FromArgb(128, 255, 255);
+        col_Company_Cancel.DefaultCellStyle.BackColor = Color.FromArgb(128, 255, 255);
+        col_MKH_InUse.DefaultCellStyle.BackColor = Color.FromArgb(128, 255, 255);
+        col_CMND_InUse.DefaultCellStyle.BackColor = Color.FromArgb(128, 255, 255);
+        col_TicketNumber.DefaultCellStyle.BackColor = Color.FromArgb(128, 255, 255);
+        col_CompanyCode.DefaultCellStyle.BackColor = Color.FromArgb(128, 255, 128);
 
     }
-
     private async Task InitializeDatabaseAsync()
     {
         // Create table if not exists
@@ -42,13 +45,13 @@ public partial class CustomerMerger : Form
         await _sqliteHelper.ExecuteNonQueryAsync(@"INSERT INTO CompanyCode (Name, Code) VALUES ('John Doe', 30)");
 
         // Query and display data
-        await LoadDataAsync();
+        //await LoadDataAsync();
     }
 
     private async Task LoadDataAsync()
     {
         var companyTable = await _sqliteHelper.ExecuteQueryAsync("SELECT Name, Code FROM CompanyCode");
-        dgvCustomerOutput.DataSource = companyTable; // Assuming you have a DataGridView to show data
+        dgvCustomerOutput.DataSource = companyTable;
     }
 
     private void dgvCustomerInput_KeyUp(object sender, KeyEventArgs e)
@@ -59,6 +62,10 @@ public partial class CustomerMerger : Form
 
             try
             {
+                Cursor.Current = Cursors.WaitCursor;
+
+                LoadData();
+
                 string clipboardText = Clipboard.GetText();
 
                 string[] rows = clipboardText.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
@@ -71,9 +78,9 @@ public partial class CustomerMerger : Form
 
                     string mkhCancel = columns[0];
                     string cmndCancel = columns[1];
-                    string mkhInUse = columns[2];
-                    string cmndInUse = columns[3];
-                    string companyCancel = columns[4];
+                    string companyCancel = columns[2];
+                    string mkhInUse = columns[3];
+                    string cmndInUse = columns[4];
                     string ticketnumber = columns[5];
 
                     // Add the data to the DataGridView's new row
@@ -82,25 +89,42 @@ public partial class CustomerMerger : Form
 
                     newRow.Cells["col_MKH_Cancel"].Value = mkhCancel;
                     newRow.Cells["col_CMND_Cancel"].Value = cmndCancel;
+                    newRow.Cells["col_Company_Cancel"].Value = companyCancel;
                     newRow.Cells["col_MKH_InUse"].Value = mkhInUse;
                     newRow.Cells["col_CMND_InUse"].Value = cmndInUse;
-                    newRow.Cells["col_Company_Cancel"].Value = companyCancel;
                     newRow.Cells["col_TicketNumber"].Value = ticketnumber;
 
-                    dt
+                    var foundCompanyCode = from x in companyTable.AsEnumerable()
+                                           where x.Field<string>("Name").ToUpper().Trim() == companyCancel.ToUpper().Trim()
+                                           select x;
 
+                    if (foundCompanyCode.Any())
+                    {
+                        foreach (DataRow item in foundCompanyCode)
+                        {
+                            newRow.Cells["col_CompanyCode"].Value = item["Code"];
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        string errorMessage = "Not found company name in database";
+                        Log.Error(errorMessage);
+                    }
+
+                    Cursor.Current = Cursors.Default;
                 }
             }
             catch (Exception ex)
             {
                 Log.Error($"Exeception occurs: {ex.Message}");
-                MessageBox.Show("Error");
+                MessageBox.Show($"Error. Please try again.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
-
         }
     }
 
-    private async void btn_Verify_ClickAsync(object sender, EventArgs e)
+    private void btn_Verify_ClickAsync(object sender, EventArgs e)
     {
         // Add a new user to the database using parameterized query
         string name = "Jane Doe"; // Example input
@@ -113,9 +137,79 @@ public partial class CustomerMerger : Form
         };
 
         string query = "INSERT INTO CompanyCode (Name, Code) VALUES (@Name, @Code)";
-        await _sqliteHelper.ExecuteNonQueryWithParamsAsync(query, parameters);
+        _sqliteHelper.ExecuteNonQueryWithParamsAsync(query, parameters);
 
-        // Refresh the data in the DataGridView
-        await LoadDataAsync();
     }
+
+    private void btn_Verify_Click(object sender, EventArgs e)
+    {
+        if (dgvCustomerInput.Rows.Count < 0) return;
+
+        DataTable messageTable = new DataTable();
+        messageTable.Columns.Add("Message", typeof(string));
+
+        string ticknumbepath = string.Empty;
+
+        try
+        {
+            foreach (DataGridViewRow item in dgvCustomerInput.Rows)
+            {
+                string mkhCancel = item.Cells["col_MKH_Cancel"].Value.ToString() ?? string.Empty;
+                string cmndCancel = item.Cells["col_CMND_Cancel"].Value.ToString() ?? string.Empty;
+                string companyCodeCancel = item.Cells["col_CompanyCode"].Value.ToString() ?? string.Empty;
+                string mkhInUse = item.Cells["col_MKH_InUse"].Value.ToString() ?? string.Empty;
+                string cmndInUse = item.Cells["col_CMND_InUse"].Value.ToString() ?? string.Empty;
+                string ticketnumber = item.Cells["col_TicketNumber"].Value.ToString() ?? string.Empty;
+                string messsage = $"{mkhCancel}*{cmndCancel}*{mkhInUse}*{cmndInUse}*{companyCodeCancel}*{ticketnumber}";
+                ticknumbepath = ticketnumber;
+                messageTable.Rows.Add(messsage);
+                Log.Debug($"Message:{messsage}");
+            }
+
+            dgvCustomerOutput.DataSource = messageTable;
+
+            string filePath = $"D:\\Golangproject\\Github_Project\\desktop-app-golang\\DailyTaskT24\\DailyTaskT24\\bin\\Debug\\net6.0-windows\\{ticknumbepath}";
+            ExportDataTableToCsv(messageTable, filePath);
+
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Error. Please try again.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            Log.Error($"{ex}");
+        }
+
+
+
+    }
+
+
+
+
+    public void ExportDataTableToCsv(DataTable dataTable, string filePath)
+    {
+        StringBuilder sb = new StringBuilder();
+
+        // Add column names to the CSV
+        string[] columnNames = new string[dataTable.Columns.Count];
+        for (int i = 0; i < dataTable.Columns.Count; i++)
+        {
+            columnNames[i] = dataTable.Columns[i].ColumnName;
+        }
+        sb.AppendLine(string.Join(",", columnNames));
+
+        // Add rows to the CSV
+        foreach (DataRow row in dataTable.Rows)
+        {
+            string[] fields = new string[dataTable.Columns.Count];
+            for (int i = 0; i < dataTable.Columns.Count; i++)
+            {
+                fields[i] = row[i].ToString().Replace(",", ";"); // Ensure commas inside values are handled
+            }
+            sb.AppendLine(string.Join(",", fields));
+        }
+
+        // Write to a file
+        File.WriteAllText(filePath, sb.ToString());
+    }
+
 }

@@ -26,6 +26,13 @@ namespace DailyTaskT24.Database
             return connection;
         }
 
+        public SQLiteConnection OpenConnectionSync()
+        {
+            var connection = new SQLiteConnection(_connectionString);
+            connection.Open();
+            return connection;
+        }
+
         // Close connection to the database
         public void CloseConnection(SQLiteConnection connection)
         {
@@ -94,5 +101,18 @@ namespace DailyTaskT24.Database
                 }
             }
         }
+
+        public DataTable ExecuteQuerySync(string query)
+        {
+            using (var connection =  OpenConnectionSync())
+            using (var command = new SQLiteCommand(query, connection))
+            using (var adapter = new SQLiteDataAdapter(command))
+            {
+                var dataTable = new DataTable();
+                adapter.Fill(dataTable);
+                return dataTable;
+            }
+        }
+
     }
 }
