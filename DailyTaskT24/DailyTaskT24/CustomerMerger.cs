@@ -168,18 +168,16 @@ public partial class CustomerMerger : Form
 
             dgvCustomerOutput.DataSource = messageTable;
 
-            string filePath = $"D:\\Golangproject\\Github_Project\\desktop-app-golang\\DailyTaskT24\\DailyTaskT24\\bin\\Debug\\net6.0-windows\\{ticknumbepath}";
+            string filePath = $"\\{ticknumbepath}";
             ExportDataTableToCsv(messageTable, filePath);
 
         }
         catch (Exception ex)
         {
+            Log.Error($"{ex.Message}");
             MessageBox.Show($"Error. Please try again.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            Log.Error($"{ex}");
+            return;
         }
-
-
-
     }
 
 
@@ -190,12 +188,12 @@ public partial class CustomerMerger : Form
         StringBuilder sb = new StringBuilder();
 
         // Add column names to the CSV
-        string[] columnNames = new string[dataTable.Columns.Count];
-        for (int i = 0; i < dataTable.Columns.Count; i++)
-        {
-            columnNames[i] = dataTable.Columns[i].ColumnName;
-        }
-        sb.AppendLine(string.Join(",", columnNames));
+        //string[] columnNames = new string[dataTable.Columns.Count];
+        //for (int i = 0; i < dataTable.Columns.Count; i++)
+        //{
+        //    columnNames[i] = dataTable.Columns[i].ColumnName;
+        //}
+        //sb.AppendLine(string.Join(",", columnNames));
 
         // Add rows to the CSV
         foreach (DataRow row in dataTable.Rows)

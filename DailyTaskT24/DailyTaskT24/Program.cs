@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Configuration;
+//using Microsoft.Extensions.Configuration;
 using Serilog;
 
 namespace DailyTaskT24;
@@ -18,15 +18,15 @@ static class Program
         Log.Information("Application Starting...");
 
 
-        IConfigurationBuilder builder = new ConfigurationBuilder();
+        //IConfigurationBuilder builder = new ConfigurationBuilder();
 
-        builder.AddJsonFile(Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json"));
-
-
+        //builder.AddJsonFile(Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json"));
 
 
-        var root = builder.Build();
-        var sampleConnectionString = root.GetConnectionString("DefaultConnection");
+
+
+        //var root = builder.Build();
+        //var sampleConnectionString = root.GetConnectionString("DefaultConnection");
 
 
 
