@@ -102,7 +102,7 @@ partial class CustomerMerger
             this.dgvCustomerInput.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvCustomerInput.Location = new System.Drawing.Point(3, 74);
             this.dgvCustomerInput.Name = "dgvCustomerInput";
-            this.dgvCustomerInput.Size = new System.Drawing.Size(743, 435);
+            this.dgvCustomerInput.Size = new System.Drawing.Size(742, 435);
             this.dgvCustomerInput.TabIndex = 1;
             this.dgvCustomerInput.KeyUp += new System.Windows.Forms.KeyEventHandler(this.dgvCustomerInput_KeyUp);
             // 
@@ -145,10 +145,10 @@ partial class CustomerMerger
             // 
             this.dgvCustomerOutput.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvCustomerOutput.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvCustomerOutput.Location = new System.Drawing.Point(752, 74);
+            this.dgvCustomerOutput.Location = new System.Drawing.Point(751, 74);
             this.dgvCustomerOutput.Name = "dgvCustomerOutput";
             this.dgvCustomerOutput.RowTemplate.Height = 25;
-            this.dgvCustomerOutput.Size = new System.Drawing.Size(559, 435);
+            this.dgvCustomerOutput.Size = new System.Drawing.Size(560, 435);
             this.dgvCustomerOutput.TabIndex = 2;
             // 
             // tableLayoutPanel2
@@ -178,7 +178,7 @@ partial class CustomerMerger
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 42.85714F));
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 57.14286F));
             this.tableLayoutPanel3.Controls.Add(this.btn_Upload, 0, 1);
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(752, 3);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(751, 3);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 2;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -194,6 +194,7 @@ partial class CustomerMerger
             this.btn_Upload.TabIndex = 0;
             this.btn_Upload.Text = "Upload";
             this.btn_Upload.UseVisualStyleBackColor = true;
+            this.btn_Upload.Click += new System.EventHandler(this.btn_Upload_Click);
             // 
             // CustomerMerger
             // 

@@ -1,5 +1,7 @@
-//using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using Serilog;
+using Renci.SshNet;
+using DailyTaskT24.SSH;
 
 namespace DailyTaskT24;
 
@@ -18,12 +20,26 @@ static class Program
         Log.Information("Application Starting...");
 
 
-        //IConfigurationBuilder builder = new ConfigurationBuilder();
+        // Set up configuration to read appsettings.json
+        IConfiguration config = new ConfigurationBuilder()
+            .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+            .AddJsonFile("appsettings.json")
+            .Build();
+
+
+        // Read SSH configuration from appsettings.json
+        var sshSettings = config.GetSection("SSHSettings");
+        string host = sshSettings["Host"];
+        string username = sshSettings["Username"];
+        string password = sshSettings["Password"];
+
+        SshHelper sshClient = new SshHelper(host, username, password);
+        string command = "ls";
+
+        // Execute the command
+        sshClient.ConnectAndExecuteCommand(command);
 
         //builder.AddJsonFile(Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json"));
-
-
-
 
         //var root = builder.Build();
         //var sampleConnectionString = root.GetConnectionString("DefaultConnection");

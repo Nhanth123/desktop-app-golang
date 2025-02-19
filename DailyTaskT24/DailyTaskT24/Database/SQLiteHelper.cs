@@ -5,17 +5,28 @@ namespace DailyTaskT24.Database
 {
     public class SQLiteHelper
     {
-        private string _connectionString;
+        private readonly string _connectionString;
 
-        public SQLiteHelper(string databaseFilePath)
+        public SQLiteHelper(string databaseFileName = "mydatabase.db")
         {
-            // If the database file doesn't exist, create it
-            if (!File.Exists(databaseFilePath))
+            string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+
+            string dbPath = Path.Combine(baseDirectory, "Data", databaseFileName);
+
+            // Ensure the directory exists
+            if (!Directory.Exists(Path.GetDirectoryName(dbPath)))
             {
-                SQLiteConnection.CreateFile(databaseFilePath);
+                Directory.CreateDirectory(Path.GetDirectoryName(dbPath));
             }
 
-            _connectionString = $"Data Source={databaseFilePath};Version=3;";
+            // If the database file doesn't exist, create it
+            if (!File.Exists(dbPath))
+            {
+                SQLiteConnection.CreateFile(dbPath);
+            }
+
+
+            _connectionString = $"Data Source={dbPath};Version=3;";
         }
 
         // Open connection to the database (async)

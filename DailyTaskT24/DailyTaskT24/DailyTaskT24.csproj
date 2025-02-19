@@ -18,9 +18,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Resource Include="CompanyMap.json">
+      <EmbeddedResource Include="CompanyMap.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Resource>
+      </EmbeddedResource>
     </ItemGroup>
 
     <ItemGroup>
@@ -30,13 +30,14 @@
     </ItemGroup>
 
     <ItemGroup>
-      <!--<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.1" />
+      <!--<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.1" />-->
       <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
       <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
-      <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.1" />-->
+      <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.1" />
       <PackageReference Include="Serilog" Version="4.2.0" />
       <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
       <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
+      <PackageReference Include="SSH.NET" Version="2024.1.0" />
       <PackageReference Include="System.Data.SQLite" Version="1.0.119" />
     </ItemGroup>
 

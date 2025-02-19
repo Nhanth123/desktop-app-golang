@@ -10,6 +10,7 @@ public partial class CustomerMerger : Form
 {
     private SQLiteHelper _sqliteHelper;
     DataTable companyTable = new();
+    DataTable textMessageTable = new();
 
     public CustomerMerger()
     {
@@ -18,10 +19,8 @@ public partial class CustomerMerger : Form
 
         _sqliteHelper = new SQLiteHelper("mydatabase.db");
     }
-
     private void LoadData()
     {
-
         companyTable = _sqliteHelper.ExecuteQuerySync("SELECT Name, Code FROM CompanyCode");
 
         col_MKH_Cancel.DefaultCellStyle.BackColor = Color.FromArgb(128, 255, 255);
@@ -70,6 +69,8 @@ public partial class CustomerMerger : Form
 
                 string[] rows = clipboardText.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
 
+                string errorMessage = "";
+
                 foreach (var row in rows)
                 {
                     string[] columns = row.Split('\t');
@@ -108,9 +109,11 @@ public partial class CustomerMerger : Form
                     }
                     else
                     {
-                        string errorMessage = "Not found company name in database";
+                        errorMessage = "Not found company name in database";
                         Log.Error(errorMessage);
                     }
+
+                    newRow.ErrorText += errorMessage;
 
                     Cursor.Current = Cursors.Default;
                 }
@@ -168,7 +171,7 @@ public partial class CustomerMerger : Form
 
             dgvCustomerOutput.DataSource = messageTable;
 
-            string filePath = $"\\{ticknumbepath}";
+            string filePath = $"{ticknumbepath}";
             ExportDataTableToCsv(messageTable, filePath);
 
         }
@@ -180,12 +183,8 @@ public partial class CustomerMerger : Form
         }
     }
 
-
-
-
     public void ExportDataTableToCsv(DataTable dataTable, string filePath)
     {
-        StringBuilder sb = new StringBuilder();
 
         // Add column names to the CSV
         //string[] columnNames = new string[dataTable.Columns.Count];
@@ -194,6 +193,11 @@ public partial class CustomerMerger : Form
         //    columnNames[i] = dataTable.Columns[i].ColumnName;
         //}
         //sb.AppendLine(string.Join(",", columnNames));
+
+        StringBuilder sb = new();
+
+        string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+        string file = Path.Combine(baseDirectory, filePath);
 
         // Add rows to the CSV
         foreach (DataRow row in dataTable.Rows)
@@ -207,7 +211,11 @@ public partial class CustomerMerger : Form
         }
 
         // Write to a file
-        File.WriteAllText(filePath, sb.ToString());
+        File.WriteAllText(file, sb.ToString());
     }
 
+    private void btn_Upload_Click(object sender, EventArgs e)
+    {
+
+    }
 }
